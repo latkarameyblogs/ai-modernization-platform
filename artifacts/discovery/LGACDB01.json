@@ -1,0 +1,14 @@
+{
+  "programName" : "LGACDB01",
+  "summary" : "Adds a new customer entry to the DB2 CUSTOMER table with details including name, address, and date of birth.",
+  "businessPurpose" : "To create a new customer record in the DB2 database by capturing customer details and ensuring unique customer numbering.",
+  "inputs" : [ "Customer first name", "Customer last name", "Date of birth", "House name", "House number", "Postcode", "Mobile phone number", "Home phone number", "Email address", "Communication area (commarea) from CICS containing customer details" ],
+  "outputs" : [ "Customer number assigned and returned in commarea", "Return codes indicating success or error", "Error messages written to a TDQ queue if insertion fails" ],
+  "dependencies" : [ "COPY LGPOLICY (customer details structure)", "SQLCA DB2 communications area", "EIB system variables for CICS transaction info", "CICS Get Counter for customer number generation" ],
+  "externalPrograms" : [ "LGACVS01 (linked program after customer insert)", "LGACDB02 (linked program for additional processing)", "LGSTSQ (error message logging program)" ],
+  "files" : [ "DB2 CUSTOMER table" ],
+  "cicsUsage" : "Program is a CICS transaction program using commarea input/output, CICS LINK to other programs, CICS GET COUNTER for unique customer number generation, CICS ABEND on error, CICS ASKTIME and FORMATIME for timestamping error logs, and CICS RETURN to exit.",
+  "batchProcessing" : "None - program is designed for online CICS execution only.",
+  "suggestedMicroservice" : "Customer Management Service - handles customer creation, validation, and unique customer number assignment.",
+  "assumptions" : [ "Customer details are passed correctly in the CICS commarea with expected length.", "DB2 CUSTOMER table is accessible and structured as per expected fields.", "Customer number generation via CICS Get Counter works reliably.", "Error logging program LGSTSQ is available and handles message queues.", "Linked programs LGACVS01 and LGACDB02 exist and handle subsequent processing steps.", "Comarea length checks prevent incomplete data processing.", "No batch processing required; real-time online transaction." ]
+}

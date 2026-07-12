@@ -1,12 +1,12 @@
 {
   "microserviceName" : "Customer Management Service",
   "boundedContext" : "Customer Management",
-  "entities" : [ "Customer", "CustomerAddress", "CustomerContact", "ErrorLog" ],
+  "entities" : [ "Customer" ],
   "endpoints" : [ {
     "method" : "POST",
     "path" : "/customers",
-    "description" : "Creates a new customer record with validated customer details, generates a unique customer number, and returns the assigned customer number along with success or error codes."
+    "description" : "Create a new customer record with personal and contact details"
   } ],
   "database" : "PostgreSQL",
-  "externalDependencies" : [ "LGACVS01", "LGACDB02", "LGSTSQ", "GENACUSTNUM Counter Service", "CICS Environment Identifiers (EIBTRNID, EIBTRMID, EIBTASKN)" ]
+  "externalDependencies" : [ "LGACVS01", "LGACDB02", "LGSTSQ", "CICS Counters (GENACUSTNUM)", "CICS System Variables (EIBTRNID, EIBTRMID, EIBTASKN, EIBCALEN)" ]
 }

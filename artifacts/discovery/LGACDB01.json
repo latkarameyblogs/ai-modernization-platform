@@ -1,14 +1,14 @@
 {
   "programName" : "LGACDB01",
-  "summary" : "Adds a new customer entry to the DB2 CUSTOMER table by capturing customer's name, address, and date of birth.",
-  "businessPurpose" : "To create a new customer record in the DB2 CUSTOMER table, ensuring unique customer numbers and handling related data insertion and error logging.",
-  "inputs" : [ "Customer's first name", "Customer's last name", "Customer's date of birth", "House name", "House number", "Postcode", "Mobile phone number", "Home phone number", "Email address", "Incoming CICS commarea data" ],
-  "outputs" : [ "New customer number assigned", "Success or error return codes", "Error messages written to TDQ", "Return commarea with customer number" ],
-  "dependencies" : [ "Copybook LGPOLICY for customer details definition", "DB2 CUSTOMER table structure", "SQLCA DB2 communications area", "CICS programs LGACVS01 and LGACDB02", "CICS program LGSTSQ for error message queue writing" ],
+  "summary" : "Adds a new customer's name, address, and date of birth to the DB2 CUSTOMER table by creating a new customer entry.",
+  "businessPurpose" : "To insert new customer details into the DB2 CUSTOMER table, ensuring a unique customer number is assigned and customer data is persisted for downstream processing.",
+  "inputs" : [ "Customer First Name", "Customer Last Name", "Customer Date of Birth", "House Name", "House Number", "Postcode", "Mobile Phone Number", "Home Phone Number", "Email Address", "EIBCALEN (Comarea Length)", "EIBTRNID (Transaction ID)", "EIBTRMID (Terminal ID)", "EIBTASKN (Task Number)", "Input Comarea DFHCOMMAREA" ],
+  "outputs" : [ "Return Code in Comarea (CA-RETURN-CODE)", "Assigned Customer Number", "Error Messages written to CICS Temporary Data Queue (TDQ)", "Updated Comarea on return" ],
+  "dependencies" : [ "COPY LGPOLICY (for customer details length definition)", "DB2 CUSTOMER table", "CICS Counter GENAcount from Pool GENApool", "CICS Temporary Data Queue for error messages", "COPYBOOK LGCMAREA (for DFHCOMMAREA structure)" ],
   "externalPrograms" : [ "LGACVS01", "LGACDB02", "LGSTSQ" ],
-  "files" : [ "DB2 CUSTOMER table", "CICS transient data queues (TDQ) for error logging" ],
-  "cicsUsage" : "Receives input via CICS commarea, uses CICS Get Counter for unique customer number generation, performs CICS LINK to LGACVS01 and LGACDB02 programs, writes error messages to TDQ via LGSTSQ, and returns control to caller via CICS RETURN.",
-  "batchProcessing" : "Not applicable; program is designed for online CICS processing only.",
-  "suggestedMicroservice" : "Customer Management Service - responsible for creating and managing customer records, including validation, unique customer number generation, and error handling.",
-  "assumptions" : [ "Customer details structure and length are defined in the included LGPOLICY copybook.", "DB2 CUSTOMER table supports identity columns for customer number generation if counter service is unavailable.", "CICS environment provides necessary transaction and terminal identifiers (EIBTRNID, EIBTRMID, EIBTASKN).", "Error logging is performed asynchronously via a dedicated error logging program LGSTSQ.", "The customer number generation counter (GENACUSTNUM) is managed externally and accessible via CICS Get Counter.", "Programs LGACVS01 and LGACDB02 are related services that handle additional processing after customer insertion.", "Input commarea length is validated to ensure all required customer data is present." ]
+  "files" : [ "DB2 CUSTOMER table" ],
+  "cicsUsage" : "This program is a CICS transaction program that processes incoming commarea, performs CICS Get Counter to obtain a unique customer number, uses EXEC SQL for DB2 insert operations, links to other CICS programs (LGACVS01 and LGACDB02) passing commarea data, writes error messages to a CICS Temporary Data Queue via LGSTSQ, and returns control to the caller via EXEC CICS RETURN.",
+  "batchProcessing" : "None - program is designed for online CICS transaction processing only.",
+  "suggestedMicroservice" : "Customer Management Microservice: Responsible for adding new customer records including validation, unique customer number generation, and persistence to a relational database.",
+  "assumptions" : [ "Customer details are passed in a correctly formatted commarea matching the expected length.", "The CICS counter GENAcount reliably generates unique customer numbers.", "DB2 CUSTOMER table schema matches the fields provided in the insert statement.", "Linked programs LGACVS01 and LGACDB02 handle further processing or security validation as needed.", "Error handling involves sending messages to a CICS Temporary Data Queue for monitoring and logging.", "EIB variables (EIBCALEN, EIBTRNID, etc.) are correctly populated by the CICS environment.", "The program runs within a CICS environment with DB2 access configured." ]
 }

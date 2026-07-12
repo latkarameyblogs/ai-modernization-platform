@@ -5,8 +5,8 @@
   "endpoints" : [ {
     "method" : "POST",
     "path" : "/customers",
-    "description" : "Create a new customer record with name, address, and date of birth"
+    "description" : "Add a new customer record with validated details and assign a unique customer number"
   } ],
   "database" : "PostgreSQL",
-  "externalDependencies" : [ "LGACVS01", "LGACDB02", "LGSTSQ" ]
+  "externalDependencies" : [ "COPY LGPOLICY", "DB2 CUSTOMER table", "CICS Counter GENAcount from Pool GENApool", "CICS Temporary Data Queue for error messages", "COPYBOOK LGCMAREA", "LGACVS01", "LGACDB02", "LGSTSQ" ]
 }

@@ -1,14 +1,14 @@
 {
   "programName" : "LGACDB01",
-  "summary" : "Adds a new customer entry to the DB2 CUSTOMER table with details including name, address, and date of birth.",
-  "businessPurpose" : "To create a new customer record in the DB2 database by capturing customer details and ensuring unique customer numbering.",
-  "inputs" : [ "Customer first name", "Customer last name", "Date of birth", "House name", "House number", "Postcode", "Mobile phone number", "Home phone number", "Email address", "Communication area (commarea) from CICS containing customer details" ],
-  "outputs" : [ "Customer number assigned and returned in commarea", "Return codes indicating success or error", "Error messages written to a TDQ queue if insertion fails" ],
-  "dependencies" : [ "COPY LGPOLICY (customer details structure)", "SQLCA DB2 communications area", "EIB system variables for CICS transaction info", "CICS Get Counter for customer number generation" ],
-  "externalPrograms" : [ "LGACVS01 (linked program after customer insert)", "LGACDB02 (linked program for additional processing)", "LGSTSQ (error message logging program)" ],
-  "files" : [ "DB2 CUSTOMER table" ],
-  "cicsUsage" : "Program is a CICS transaction program using commarea input/output, CICS LINK to other programs, CICS GET COUNTER for unique customer number generation, CICS ABEND on error, CICS ASKTIME and FORMATIME for timestamping error logs, and CICS RETURN to exit.",
-  "batchProcessing" : "None - program is designed for online CICS execution only.",
-  "suggestedMicroservice" : "Customer Management Service - handles customer creation, validation, and unique customer number assignment.",
-  "assumptions" : [ "Customer details are passed correctly in the CICS commarea with expected length.", "DB2 CUSTOMER table is accessible and structured as per expected fields.", "Customer number generation via CICS Get Counter works reliably.", "Error logging program LGSTSQ is available and handles message queues.", "Linked programs LGACVS01 and LGACDB02 exist and handle subsequent processing steps.", "Comarea length checks prevent incomplete data processing.", "No batch processing required; real-time online transaction." ]
+  "summary" : "Adds a new customer entry to the DB2 CUSTOMER table by capturing customer's name, address, and date of birth.",
+  "businessPurpose" : "To create a new customer record in the DB2 CUSTOMER table, ensuring unique customer numbers and handling related data insertion and error logging.",
+  "inputs" : [ "Customer's first name", "Customer's last name", "Customer's date of birth", "House name", "House number", "Postcode", "Mobile phone number", "Home phone number", "Email address", "Incoming CICS commarea data" ],
+  "outputs" : [ "New customer number assigned", "Success or error return codes", "Error messages written to TDQ", "Return commarea with customer number" ],
+  "dependencies" : [ "Copybook LGPOLICY for customer details definition", "DB2 CUSTOMER table structure", "SQLCA DB2 communications area", "CICS programs LGACVS01 and LGACDB02", "CICS program LGSTSQ for error message queue writing" ],
+  "externalPrograms" : [ "LGACVS01", "LGACDB02", "LGSTSQ" ],
+  "files" : [ "DB2 CUSTOMER table", "CICS transient data queues (TDQ) for error logging" ],
+  "cicsUsage" : "Receives input via CICS commarea, uses CICS Get Counter for unique customer number generation, performs CICS LINK to LGACVS01 and LGACDB02 programs, writes error messages to TDQ via LGSTSQ, and returns control to caller via CICS RETURN.",
+  "batchProcessing" : "Not applicable; program is designed for online CICS processing only.",
+  "suggestedMicroservice" : "Customer Management Service - responsible for creating and managing customer records, including validation, unique customer number generation, and error handling.",
+  "assumptions" : [ "Customer details structure and length are defined in the included LGPOLICY copybook.", "DB2 CUSTOMER table supports identity columns for customer number generation if counter service is unavailable.", "CICS environment provides necessary transaction and terminal identifiers (EIBTRNID, EIBTRMID, EIBTASKN).", "Error logging is performed asynchronously via a dedicated error logging program LGSTSQ.", "The customer number generation counter (GENACUSTNUM) is managed externally and accessible via CICS Get Counter.", "Programs LGACVS01 and LGACDB02 are related services that handle additional processing after customer insertion.", "Input commarea length is validated to ensure all required customer data is present." ]
 }

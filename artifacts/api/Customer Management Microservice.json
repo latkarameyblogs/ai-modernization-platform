@@ -1,0 +1,12 @@
+{
+  "microserviceName" : "Customer Management Microservice",
+  "boundedContext" : "Customer Management",
+  "entities" : [ "Customer" ],
+  "endpoints" : [ {
+    "method" : "POST",
+    "path" : "/customers",
+    "description" : "Create a new customer record with name, address, and date of birth"
+  } ],
+  "database" : "PostgreSQL",
+  "externalDependencies" : [ "LGACVS01", "LGACDB02", "LGSTSQ" ]
+}

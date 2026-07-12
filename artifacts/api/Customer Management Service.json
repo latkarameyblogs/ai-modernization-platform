@@ -5,8 +5,8 @@
   "endpoints" : [ {
     "method" : "POST",
     "path" : "/customers",
-    "description" : "Create a new customer record with personal and contact details"
+    "description" : "Creates a new customer record with provided details"
   } ],
   "database" : "PostgreSQL",
-  "externalDependencies" : [ "LGACVS01", "LGACDB02", "LGSTSQ", "CICS Counters (GENACUSTNUM)", "CICS System Variables (EIBTRNID, EIBTRMID, EIBTASKN, EIBCALEN)" ]
+  "externalDependencies" : [ "LGACVS01", "LGACDB02", "LGSTSQ" ]
 }

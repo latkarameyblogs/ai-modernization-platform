@@ -1,14 +1,14 @@
 {
   "programName" : "LGACDB01",
-  "summary" : "Adds a new customer's name, address, and date of birth to the DB2 CUSTOMER table by creating a new customer entry.",
-  "businessPurpose" : "To insert new customer details into the DB2 CUSTOMER table, ensuring a unique customer number is assigned and customer data is persisted for downstream processing.",
-  "inputs" : [ "Customer First Name", "Customer Last Name", "Customer Date of Birth", "House Name", "House Number", "Postcode", "Mobile Phone Number", "Home Phone Number", "Email Address", "EIBCALEN (Comarea Length)", "EIBTRNID (Transaction ID)", "EIBTRMID (Terminal ID)", "EIBTASKN (Task Number)", "Input Comarea DFHCOMMAREA" ],
-  "outputs" : [ "Return Code in Comarea (CA-RETURN-CODE)", "Assigned Customer Number", "Error Messages written to CICS Temporary Data Queue (TDQ)", "Updated Comarea on return" ],
-  "dependencies" : [ "COPY LGPOLICY (for customer details length definition)", "DB2 CUSTOMER table", "CICS Counter GENAcount from Pool GENApool", "CICS Temporary Data Queue for error messages", "COPYBOOK LGCMAREA (for DFHCOMMAREA structure)" ],
+  "summary" : "Adds a new customer's details including name, address, and date of birth to the DB2 CUSTOMER table, creating a new customer entry.",
+  "businessPurpose" : "To enable the addition of new customer records into the DB2 CUSTOMER database table, ensuring customer details are stored for further processing and reference.",
+  "inputs" : [ "Customer first name", "Customer last name", "Date of birth", "House name", "House number", "Postcode", "Mobile phone number", "Home phone number", "Email address", "Incoming CICS commarea containing customer details" ],
+  "outputs" : [ "Customer number assigned/generated", "Return codes indicating success or failure", "Error messages written to TDQ in case of processing errors" ],
+  "dependencies" : [ "COPYBOOK LGPOLICY for customer details length", "DB2 CUSTOMER table structure and identity value function", "CICS counter resource GENAcount in pool GENApool", "CICS error logging program LGSTSQ", "CICS linkage programs LGACVS01 and LGACDB02" ],
   "externalPrograms" : [ "LGACVS01", "LGACDB02", "LGSTSQ" ],
   "files" : [ "DB2 CUSTOMER table" ],
-  "cicsUsage" : "This program is a CICS transaction program that processes incoming commarea, performs CICS Get Counter to obtain a unique customer number, uses EXEC SQL for DB2 insert operations, links to other CICS programs (LGACVS01 and LGACDB02) passing commarea data, writes error messages to a CICS Temporary Data Queue via LGSTSQ, and returns control to the caller via EXEC CICS RETURN.",
-  "batchProcessing" : "None - program is designed for online CICS transaction processing only.",
-  "suggestedMicroservice" : "Customer Management Microservice: Responsible for adding new customer records including validation, unique customer number generation, and persistence to a relational database.",
-  "assumptions" : [ "Customer details are passed in a correctly formatted commarea matching the expected length.", "The CICS counter GENAcount reliably generates unique customer numbers.", "DB2 CUSTOMER table schema matches the fields provided in the insert statement.", "Linked programs LGACVS01 and LGACDB02 handle further processing or security validation as needed.", "Error handling involves sending messages to a CICS Temporary Data Queue for monitoring and logging.", "EIB variables (EIBCALEN, EIBTRNID, etc.) are correctly populated by the CICS environment.", "The program runs within a CICS environment with DB2 access configured." ]
+  "cicsUsage" : "The program is invoked in a CICS environment, uses CICS commarea for data input, interacts with CICS counters to obtain customer number, performs CICS LINK calls to other CICS programs, uses CICS commands for error handling, time formatting, and returns control to caller via CICS RETURN.",
+  "batchProcessing" : "None - program is designed as an online CICS transaction with no batch processing components.",
+  "suggestedMicroservice" : "Customer Management Service - responsible for creating and managing customer records, including validation and interaction with a customer database.",
+  "assumptions" : [ "CICS environment is available and running.", "DB2 database and CUSTOMER table exist and are accessible.", "CICS counters for generating customer numbers are configured correctly.", "Linked programs LGACVS01 and LGACDB02 implement further processing steps.", "Error logging program LGSTSQ is available for message queueing.", "Incoming commarea format matches expected customer details structure.", "SQLCODE and CICS response codes are handled appropriately for error detection.", "Customer number generation falls back to DB2 identity column when counter is unavailable." ]
 }

@@ -43,7 +43,7 @@ public class ModernizationController {
                 projectZipService.zipModernizationOutput(
                         "artifacts/discovery",
                         "artifacts/api",
-                        "generated/customermanagementservice");
+                        "generated");
 
         ByteArrayResource resource =
                 new ByteArrayResource(zip);
